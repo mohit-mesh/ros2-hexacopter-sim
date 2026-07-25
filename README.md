@@ -1,5 +1,87 @@
 ROS 2 Jazzy Hexacopter Simulation
 
+A high-performance 6-DOF hexacopter simulation built for ROS 2 Jazzy and Gazebo, featuring GPU-Lidar integration, velocity-based flight control, and seamless keyboard teleoperation.
+
+🚀 Features
+
+ROS 2 Jazzy Native: Built using standard ament_cmake patterns for seamless integration.
+
+Gazebo/GZ Sim: Fully physics-enabled simulation with custom visual and collision models.
+
+GPU-Lidar Integration: Includes a 360-degree LiDAR sensor (/scan) for mapping and navigation.
+
+3D Velocity Control: Enables full 6-DOF movement (X, Y, Z, Yaw) via standard cmd_vel messages.
+
+Teleop Ready: Out-of-the-box compatibility with teleop_twist_keyboard.
+
+🛠️ Prerequisites
+
+Ensure you have the following installed on Ubuntu Linux:
+
+ROS 2 Jazzy
+
+Gazebo (GZ Sim)
+
+ros_gz_bridge and ros_gz_sim
+
+Install the teleop dependency:
+
+sudo apt install ros-jazzy-teleop-twist-keyboard
+
+
+📦 Installation
+
+Clone this repository into your ROS 2 workspace src directory:
+
+cd ~/ws_mobile/src
+git clone https://github.com/YOUR-USERNAME/ros2-hexacopter-sim.git hexacopter_sim
+
+
+Build the package:
+
+cd ~/ws_mobile
+colcon build --packages-select hexacopter_sim
+source install/setup.bash
+
+
+🎮 Usage
+
+1. Launch the Simulation
+
+ros2 launch hexacopter_sim gazebo_model.launch.py
+
+
+2. Control the Drone
+
+In a separate terminal, run:
+
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+
+Key Mapping:
+
+Move: i (Forward), , (Backward), j (Left), l (Right)
+
+Altitude: t (Ascend), b (Descend)
+
+Rotation: u (Counter-Clockwise), o (Clockwise)
+
+Stop: k
+
+🗂️ Project Structure
+
+hexacopter_sim/
+├── launch/             # Launch files
+├── model/              # URDF/Xacro models
+├── parameters/         # Bridge configurations
+├── CMakeLists.txt      # Build configuration
+└── package.xml         # Dependencies and metadata
+
+
+📜 License
+
+Distributed under the MIT License.ROS 2 Jazzy Hexacopter Simulation
+
 A custom 6-DOF drone simulation built for ROS 2 Jazzy and Gazebo, featuring GPU-Lidar integration, velocity-based flight control, and seamless keyboard teleoperation.
 
 🚀 Features
