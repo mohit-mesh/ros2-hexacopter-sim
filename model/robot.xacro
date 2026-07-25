@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="[http://www.ros.org/wiki/xacro](http://www.ros.org/wiki/xacro)" name="hexacopter_robot">
+
+  <!-- ================= BASE LINK ================= -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.2" length="0.08"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.2" length="0.08"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.02" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.04"/>
+    </inertial>
+  </link>
+
+  <!-- Disable gravity for the base link to allow 3D hovering -->
+  <gazebo reference="base_link">
+    <gravity>false</gravity>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- ================= ROTOR MACRO ================= -->
+  <!-- A macro to cleanly generate 6 rotor arms and propellers -->
+  <xacro:macro name="rotor" params="prefix angle">
+    
+    <!-- Arm connecting center to rotor -->
+    <link name="${prefix}_arm">
+      <visual>
+        <geometry>
+          <cylinder radius="0.015" length="0.25"/>
+        </geometry>
+        <origin xyz="${0.125 * cos(angle)} ${0.125 * sin(angle)} 0" rpy="1.5708 ${angle} 0"/>
+        <material name="gray">
+          <color rgba="0.5 0.5 0.5 1"/>
+        </material>
+      </visual>
+    </link>
+    <joint name="${prefix}_arm_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_arm"/>
+    </joint>
+
+    <!-- Propeller visually placed at the end of the arm -->
+    <link name="${prefix}_prop">
+      <visual>
+        <geometry>
+          <cylinder radius="0.12" length="0.01"/>
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+      </visual>
+    </link>
+    <joint name="${prefix}_prop_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${prefix}_prop"/>
+      <origin xyz="${0.25 * cos(angle)} ${0.25 * sin(angle)} 0.05" rpy="0 0 0"/>
+    </joint>
+    
+    <gazebo reference="${prefix}_prop">
+      <material>Gazebo/DarkGrey</material>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Spawn 6 Rotors -->
+  <xacro:rotor prefix="rotor_1" angle="0"/>
+  <xacro:rotor prefix="rotor_2" angle="1.0472"/>
+  <xacro:rotor prefix="rotor_3" angle="2.0944"/>
+  <xacro:rotor prefix="rotor_4" angle="3.14159"/>
+  <xacro:rotor prefix="rotor_5" angle="4.1888"/>
+  <xacro:rotor prefix="rotor_6" angle="5.2360"/>
+
+  <!-- ================= LIDAR JOINT & LINK ================= -->
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+  </joint>
+
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.04"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.05" length="0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.000075" ixy="0" ixz="0" iyy="0.000075" iyz="0" izz="0.000125"/>
+    </inertial>
+  </link>
+  
+  <gazebo reference="lidar_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="lidar_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+  <!-- ================= GAZEBO PLUGINS & SENSORS ================= -->
+
+  <!-- Sensors System Plugin -->
+  <gazebo>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+  </gazebo>
+
+  <!-- Velocity Control Plugin (Replaces DiffDrive for 3D flight) -->
+  <gazebo>
+    <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+      <!-- This allows us to command linear X, Y, Z and angular Z via cmd_vel -->
+      <topic>cmd_vel</topic>
+    </plugin>
+  </gazebo>
+
+  <!-- Lidar Sensor Definition (Imported exact specs from your mobile robot) -->
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <pose relative_to="lidar_link">0 0 0 0 0 0</pose>
+      <topic>scan</topic>
+      <gz_frame_id>lidar_link</gz_frame_id>
+      <update_rate>10</update_rate>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.15</min>
+          <max>12.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.001</stddev>
+        </noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+</robot>
