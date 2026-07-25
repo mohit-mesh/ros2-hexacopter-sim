@@ -1,39 +1,40 @@
 ROS 2 Jazzy Hexacopter Simulation
 
-A high-performance 6-DOF hexacopter simulation built for ROS 2 Jazzy and Gazebo, featuring GPU-Lidar integration, velocity-based flight control, and seamless keyboard teleoperation.
+A high-performance 6-DOF hexacopter simulation package built for ROS 2 Jazzy and Gazebo. This project features GPU-Lidar integration, 3D velocity-based flight control, and seamless keyboard teleoperation, providing a robust foundation for drone navigation and sensing experiments.
 
 🚀 Features
 
-ROS 2 Jazzy Native: Built using standard ament_cmake patterns for seamless integration.
+Custom URDF: Complete modular robot description utilizing xacro for clear structural management.
 
-Gazebo/GZ Sim: Fully physics-enabled simulation with custom visual and collision models.
+Gazebo Integration: Ready-to-use configuration for modern Gazebo/GZ Sim using ros_gz_bridge.
 
-GPU-Lidar Integration: Includes a 360-degree LiDAR sensor (/scan) for mapping and navigation.
+LiDAR Simulation: Generates standard sensor_msgs/LaserScan data for demonstration of sensor integration and environmental scanning.
 
-3D Velocity Control: Enables full 6-DOF movement (X, Y, Z, Yaw) via standard cmd_vel messages.
+Ready to Launch: Pre-configured launch file to bring up the simulated environment, robot state publisher, and parameter bridges simultaneously.
 
-Teleop Ready: Out-of-the-box compatibility with teleop_twist_keyboard.
+📋 Prerequisites
 
-🛠️ Prerequisites
+Ensure you have the following installed on your system before proceeding:
 
-Ensure you have the following installed on Ubuntu Linux:
+ROS 2 (Jazzy)
 
-ROS 2 Jazzy
+Gazebo (Modern Gazebo / GZ Sim)
 
-Gazebo (GZ Sim)
+Install the required ROS 2 dependencies:
 
-ros_gz_bridge and ros_gz_sim
-
-Install the teleop dependency:
-
-sudo apt install ros-jazzy-teleop-twist-keyboard
+sudo apt update
+sudo apt install ros-${ROS_DISTRO}-xacro ros-${ROS_DISTRO}-ros-gz-sim ros-${ROS_DISTRO}-teleop-twist-keyboard
 
 
-📦 Installation
+🛠️ Installation & Build
 
-Clone this repository into your ROS 2 workspace src directory:
+Navigate to the source directory of your ROS 2 workspace:
 
 cd ~/ws_mobile/src
+
+
+Clone this repository:
+
 git clone https://github.com/YOUR-USERNAME/ros2-hexacopter-sim.git hexacopter_sim
 
 
@@ -53,141 +54,18 @@ ros2 launch hexacopter_sim gazebo_model.launch.py
 
 2. Control the Drone
 
-In a separate terminal, run:
+In a separate terminal, use the teleop keyboard node to maneuver the hexacopter:
 
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
-
-Key Mapping:
 
 Move: i (Forward), , (Backward), j (Left), l (Right)
 
 Altitude: t (Ascend), b (Descend)
 
-Rotation: u (Counter-Clockwise), o (Clockwise)
+Rotate: u (Counter-Clockwise), o (Clockwise)
 
 Stop: k
-
-🗂️ Project Structure
-
-hexacopter_sim/
-├── launch/             # Launch files
-├── model/              # URDF/Xacro models
-├── parameters/         # Bridge configurations
-├── CMakeLists.txt      # Build configuration
-└── package.xml         # Dependencies and metadata
-
-
-📜 License
-
-Distributed under the MIT License.ROS 2 Jazzy Hexacopter Simulation
-
-A custom 6-DOF drone simulation built for ROS 2 Jazzy and Gazebo, featuring GPU-Lidar integration, velocity-based flight control, and seamless keyboard teleoperation.
-
-🚀 Features
-
-ROS 2 Jazzy Compatible: Built and structured using modern ament_cmake standards.
-
-Gazebo Integration: Powered by Gazebo simulation with custom visual and collision models.
-
-GPU-Lidar Sensor: Fully configured 360-degree LiDAR sensor (/scan) for mapping and navigation tasks.
-
-3D Velocity Control: Custom plugin configuration allowing full 6-DOF linear and angular movement via standard cmd_vel messages.
-
-Keyboard Teleop Ready: Out-of-the-box support for teleop_twist_keyboard for manual flight control.
-
-🛠️ Prerequisites & Dependencies
-
-Ensure you have the following installed on your system (Ubuntu Linux):
-
-ROS 2 Jazzy
-
-Gazebo (GZ Sim)
-
-ROS-Gazebo Bridges (ros_gz_bridge, ros_gz_sim)
-
-You will also need the keyboard teleop package:
-
-sudo apt install ros-jazzy-teleop-twist-keyboard
-
-
-📦 Installation & Build
-
-Clone this repository into your ROS 2 workspace src directory:
-
-cd ~/ws_mobile/src
-git clone https://github.com/YOUR-USERNAME/ros2-hexacopter-sim.git hexacopter_sim
-
-
-Build the package using colcon:
-
-cd ~/ws_mobile
-colcon build --packages-select hexacopter_sim
-
-
-Source your workspace:
-
-source install/setup.bash
-
-
-🎮 Usage
-
-1. Launch the Simulation
-
-Open a terminal, source your workspace, and launch the Gazebo simulation along with the robot state publisher and parameter bridge:
-
-cd ~/ws_mobile
-source install/setup.bash
-ros2 launch hexacopter_sim gazebo_model.launch.py
-
-
-2. Control the Hexacopter (Teleop)
-
-Open a second terminal, source your workspace, and run the teleop node to fly the drone using your keyboard:
-
-cd ~/ws_mobile
-source install/setup.bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
-
-
-⌨️ Flight Controls Reference
-
-Linear Motion (Horizontal):
-
-i : Move forward (+X)
-
-, : Move backward (-X)
-
-j : Move left (+Y)
-
-l : Move right (-Y)
-
-Altitude Control (Vertical):
-
-t : Ascend / Move Up (+Z)
-
-b : Descend / Move Down (-Z)
-
-Rotation (Yaw):
-
-u / o : Rotate counter-clockwise / clockwise
-
-Stop / Hover:
-
-k : Immediate stop
-
-🗂️ Project Structure
-
-hexacopter_sim/
-├── launch/
-│   └── gazebo_model.launch.py   # Main ROS 2 launch file
-├── model/
-│   └── robot.xacro              # Hexacopter URDF/Xacro model & plugins
-├── parameters/
-│   └── bridge_parameters.yaml   # ROS-Gazebo bridge configurations
-├── CMakeLists.txt               # CMake build configuration
-└── package.xml                  # Package metadata and dependencies
-
 
 📜 License
 
